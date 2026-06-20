@@ -1,19 +1,33 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+let win;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 900,
-    frame : false,
-    resizable: false,
+    frame: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, '..', 'preload.js')
     }
   });
 
   win.loadURL('http://localhost:5174');
 }
+ipcMain.on('window-close', () => {
+  if (win) win.close();
+});
+
+ipcMain.on('window-minimize', () => {
+  if (win) win.minimize();
+});
 
 app.whenReady().then(createWindow);
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
