@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+    --color-bg-dark: #1c1c1e;
+    --color-card-dark: #2c2c2e;
+    --color-button-dark: #3a3a3c;
+    --color-bg-light: #f2f2f7;
+    --color-card-light: #ffffff;
+    --color-button-light: #e5e5ea;
+    --color-accent: #e2adcb;
+    --color-text-dark: #ffffff;
+    --color-text-light: #1c1c1e;
+    --radius-calculator: 24px;
+    --color-operator-dark: #4a3a42;
+    --color-operator-light: #f0d6e8;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #111;
+    transition: background-color 0.3s;
+}
+
+body.light {
+    background-color: #e8e8ed;
+}
