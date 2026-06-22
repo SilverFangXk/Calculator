@@ -1,26 +1,20 @@
+import { useEffect } from "react";
 import { Layer } from "./layer";
 import { Display } from "./display";
 import { useCalculator } from "../hooks/useCalculator";
 
-export function Calculator({ dark, setHistory, mode }) {
+export function Calculator({ dark, setHistory, mode, onHandleButtonReady, onDisplayChange }) {
   const { display, handleButton, isRad } = useCalculator(setHistory);
 
-  // AI Integration Function
-  const handleAskAI = async () => {
-    if (!window.aiAPI?.ask) {
-      alert('AI is available only in the Electron app. Run with `npm run dev:electron`.');
-      return;
-    }
+  // Expose handleButton to App via ref callback
+  useEffect(() => {
+    if (onHandleButtonReady) onHandleButtonReady(handleButton);
+  }, [handleButton, onHandleButtonReady]);
 
-    try {
-      // You can pass the current 'display' value to the AI
-      const response = await window.aiAPI.ask(`Solve this: ${display}`);
-      alert(response);
-    } catch (error) {
-      console.error("AI Error:", error);
-      alert("Sorry, I couldn't process that.");
-    }
-  };
+  // Notify App of display changes (so AI can read current value)
+  useEffect(() => {
+    if (onDisplayChange) onDisplayChange(display);
+  }, [display, onDisplayChange]);
 
   const scientificRows = [
     ["sin", "cos", "tan", "log"],
@@ -30,29 +24,31 @@ export function Calculator({ dark, setHistory, mode }) {
   ];
 
   return (
-    <div className={`${dark ? "bg-card-dark" : "bg-card-light"} rounded-calculator p-7 w-100 transition-all duration-300 shadow-2xl `}>
-      
-      {/* AI Integration Button */}
-      <button 
-        onClick={handleAskAI}
-        className={`text-[10px] mb-2 px-2 py-1 rounded transition-colors ${dark ? 'bg-blue-600 text-white' : 'bg-blue-200 text-blue-800'}`}
-      >
-        Ask AI
-      </button>
-
+    <div
+      className={`${
+        dark ? "bg-card-dark" : "bg-card-light"
+      } relative rounded-calculator p-7 w-100 transition-all duration-300 shadow-2xl`}
+    >
       {/* Display */}
-      <Display dark={dark} value={display} />
+      <Display dark={dark} value={display} isRad={isRad} />
 
       {/* Scientific rows */}
       {mode === "scientific" && (
         <div className="space-y-2 mt-4 mb-2">
           {scientificRows.map((row, i) => (
-            <Layer key={i} value={row} dark={dark} onPress={handleButton} scientific isRad={isRad} />
+            <Layer
+              key={i}
+              value={row}
+              dark={dark}
+              onPress={handleButton}
+              scientific
+              isRad={isRad}
+            />
           ))}
         </div>
       )}
 
-      {/* Buttons */}
+      {/* Standard Buttons */}
       <div className="space-y-3 mt-4">
         <Layer value={["AC", "()", "%", "/"]} dark={dark} onPress={handleButton} />
         <Layer value={[7, 8, 9, "*"]} dark={dark} onPress={handleButton} />
