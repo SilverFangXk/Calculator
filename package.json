@@ -13,6 +13,8 @@
     "dev:electron": "concurrently \"vite\" \"wait-on http://localhost:5174 && electron .\""
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.4.2",
     "lucide-react": "^1.21.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

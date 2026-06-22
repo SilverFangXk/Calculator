@@ -3,6 +3,7 @@ import { Calculator } from "./components/calculator";
 import { Sidebar } from "./components/Sidebar";
 import { Currency } from "./components/Currency";
 import { WindowControls } from "./components/WindowControls"; 
+import { UnitConverter } from "./components/UnitConverter";
 
 function App() {
   const [dark, setDark] = useState(true);
@@ -16,6 +17,8 @@ function App() {
         return <Calculator dark={dark} setHistory={setHistory} mode={mode} />;
       case "currency":
         return <Currency dark={dark} />;
+      case "unit": // Add this case
+        return <UnitConverter dark={dark} />;
       default:
         return <Calculator dark={dark} setHistory={setHistory} mode={mode} />;
     }

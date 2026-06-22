@@ -5,14 +5,40 @@ import { useCalculator } from "../hooks/useCalculator";
 export function Calculator({ dark, setHistory, mode }) {
   const { display, handleButton, isRad } = useCalculator(setHistory);
 
+  // AI Integration Function
+  const handleAskAI = async () => {
+    if (!window.aiAPI?.ask) {
+      alert('AI is available only in the Electron app. Run with `npm run dev:electron`.');
+      return;
+    }
+
+    try {
+      // You can pass the current 'display' value to the AI
+      const response = await window.aiAPI.ask(`Solve this: ${display}`);
+      alert(response);
+    } catch (error) {
+      console.error("AI Error:", error);
+      alert("Sorry, I couldn't process that.");
+    }
+  };
+
   const scientificRows = [
     ["sin", "cos", "tan", "log"],
     ["ln", "x²", "√x", "xʸ"],
     ["π", "e", "1/x", "!"],
     ["rad", "10²", "eˣ", "deg"],
   ];
+
   return (
     <div className={`${dark ? "bg-card-dark" : "bg-card-light"} rounded-calculator p-7 w-100 transition-all duration-300 shadow-2xl `}>
+      
+      {/* AI Integration Button */}
+      <button 
+        onClick={handleAskAI}
+        className={`text-[10px] mb-2 px-2 py-1 rounded transition-colors ${dark ? 'bg-blue-600 text-white' : 'bg-blue-200 text-blue-800'}`}
+      >
+        Ask AI
+      </button>
 
       {/* Display */}
       <Display dark={dark} value={display} />
